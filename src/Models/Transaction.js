@@ -8,7 +8,8 @@ export class Transaction extends Realm.Object {
             name: "string",
             descr: "string?",
             amount: "float",
-            time: "date"
+            type: "string",
+            date: "date"
         },
         primaryKey: '_id',
     };
