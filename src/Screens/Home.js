@@ -1,157 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { GlobalStyleContext } from "../../App";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import TransactionCard from "../Components/TransactionCard";
 import { formatAmount } from "../common/helpers";
+import { globalStyle } from "../common/theme";
 
-const Home = () => {
-    const globalStyle = useContext(GlobalStyleContext);
-
+const Home = ({ navigation }) => {
     const [filterType, setFilterType] = useState("today");
-
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-        },
-        mainScrollView: {
-            flexGrow: 1,
-            backgroundColor: globalStyle.containerBgColor,
-            paddingHorizontal: 10,
-        },
-        header: {
-            flexDirection: "row",
-            justifyContent: "space-between",
-            margin: 10,
-        },
-        headerLeft: {
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-        },
-        headerRight: {},
-        title: {
-            fontSize: 17,
-            fontWeight: "bold",
-            marginLeft: 10,
-            color: globalStyle.offwhite,
-        },
-        appIcon: {
-            color: globalStyle.activeButtonBgColor,
-        },
-        userIconBg: {
-            padding: 5,
-            borderRadius: 20,
-            backgroundColor: "#414659",
-        },
-        userIcon: {
-            color: "#dde1f9",
-        },
-        greeting: {
-            marginBottom: 20,
-        },
-        name: {
-            fontSize: 18,
-            fontWeight: "bold",
-            color: globalStyle.offwhite,
-        },
-        welcome: {
-            fontSize: 12,
-            color: "#b7b7b8",
-        },
-        balanceCard: {
-            backgroundColor: globalStyle.primaryBgColor,
-            borderRadius: 15,
-            // elevation: 5,
-            // shadowColor: 'white',
-            padding: 15,
-            marginBottom: 20,
-        },
-        balance: {
-            marginBottom: 20,
-        },
-        balanceText: {
-            fontSize: 14,
-            color: "#bec5e8",
-        },
-        balanceAmount: {
-            fontSize: 35,
-            fontWeight: "bold",
-            marginTop: 5,
-            color: "#dbe1ff",
-        },
-        incomeExpenseSection: {
-            flexDirection: "row",
-            justifyContent: "space-between",
-        },
-        incomeExpenseContainer: {
-            // backgroundColor: "black",
-        },
-        incomeExpenseTitle: {
-            flexDirection: "row",
-            alignItems: "center",
-        },
-        incomeExpenseText: {
-            fontSize: 12,
-            color: "#bec5e8",
-        },
-        incomeIcon: {
-            color: globalStyle.green,
-        },
-        expenseIcon: {
-            color: globalStyle.red,
-        },
-        incomeExpenseAmount: {
-            fontSize: 20,
-            paddingHorizontal: 10,
-            color: "#dbe1ff",
-            justifyContent: "center",
-        },
-        incomeAmount: {
-            // color: globalStyle.green
-        },
-        expenseAmount: {
-            // color: globalStyle.red
-        },
-        filterButtons: {
-            marginBottom: 20,
-        },
-        filterButton: {
-            paddingVertical: 12,
-            paddingHorizontal: 15,
-            margin: 5,
-        },
-        activeFilterButton: {
-            backgroundColor: globalStyle.activeButtonBgColor,
-            borderRadius: 25,
-        },
-        inactiveFilterButton: {
-            backgroundColor: globalStyle.inactiveButtonBgColor,
-            borderRadius: 10,
-        },
-        filterText: {
-            fontSize: 14,
-            fontWeight: "bold",
-        },
-        activeFilterText: {
-            color: globalStyle.activeButtonTextColor,
-        },
-        inactiveFilterText: {
-            color: globalStyle.inactiveButtonTextColor,
-        },
-        transactions: {},
-        addButton: {
-            backgroundColor: "#334478",
-            position: "absolute",
-            bottom: 20,
-            right: 20,
-            padding: 20,
-            borderRadius: 20,
-            alignItems: "center",
-            justifyContent: "center",
-            elevation: 3,
-        },
-    });
 
     return (
         <View style={styles.container}>
@@ -221,11 +76,153 @@ const Home = () => {
                     <TransactionCard record={{ name: "Bottle", date: new Date(), amount: 500, type: "debit" }} />
                 </View>
             </ScrollView>
-            <TouchableOpacity style={styles.addButton}>
+            <TouchableOpacity onPress={() => navigation.navigate("AddTransaction")} style={styles.addButton}>
                 <Icon name="add" size={32} color="#dbe1ff" />
             </TouchableOpacity>
         </View>
     );
 };
 
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    mainScrollView: {
+        flexGrow: 1,
+        backgroundColor: globalStyle.containerBgColor,
+        paddingHorizontal: 10,
+    },
+    header: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        margin: 10,
+    },
+    headerLeft: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    headerRight: {},
+    title: {
+        fontSize: 17,
+        fontWeight: "bold",
+        marginLeft: 10,
+        color: globalStyle.offwhite,
+    },
+    appIcon: {
+        color: globalStyle.activeButtonBgColor,
+    },
+    userIconBg: {
+        padding: 5,
+        borderRadius: 20,
+        backgroundColor: "#414659",
+    },
+    userIcon: {
+        color: "#dde1f9",
+    },
+    greeting: {
+        marginBottom: 20,
+    },
+    name: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: globalStyle.offwhite,
+    },
+    welcome: {
+        fontSize: 12,
+        color: "#b7b7b8",
+    },
+    balanceCard: {
+        backgroundColor: globalStyle.primaryBgColor,
+        borderRadius: 15,
+        // elevation: 5,
+        // shadowColor: 'white',
+        padding: 15,
+        marginBottom: 20,
+    },
+    balance: {
+        marginBottom: 20,
+    },
+    balanceText: {
+        fontSize: 14,
+        color: "#bec5e8",
+    },
+    balanceAmount: {
+        fontSize: 35,
+        fontWeight: "bold",
+        marginTop: 5,
+        color: "#dbe1ff",
+    },
+    incomeExpenseSection: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    incomeExpenseContainer: {
+        // backgroundColor: "black",
+    },
+    incomeExpenseTitle: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    incomeExpenseText: {
+        fontSize: 12,
+        color: "#bec5e8",
+    },
+    incomeIcon: {
+        color: globalStyle.green,
+    },
+    expenseIcon: {
+        color: globalStyle.red,
+    },
+    incomeExpenseAmount: {
+        fontSize: 20,
+        paddingHorizontal: 10,
+        color: "#dbe1ff",
+        justifyContent: "center",
+    },
+    incomeAmount: {
+        // color: globalStyle.green
+    },
+    expenseAmount: {
+        // color: globalStyle.red
+    },
+    filterButtons: {
+        marginBottom: 20,
+    },
+    filterButton: {
+        paddingVertical: 12,
+        paddingHorizontal: 15,
+        margin: 5,
+    },
+    activeFilterButton: {
+        backgroundColor: globalStyle.activeButtonBgColor,
+        borderRadius: 25,
+    },
+    inactiveFilterButton: {
+        backgroundColor: globalStyle.inactiveButtonBgColor,
+        borderRadius: 10,
+    },
+    filterText: {
+        fontSize: 14,
+        fontWeight: "bold",
+    },
+    activeFilterText: {
+        color: globalStyle.activeButtonTextColor,
+    },
+    inactiveFilterText: {
+        color: globalStyle.inactiveButtonTextColor,
+    },
+    transactions: {},
+    addButton: {
+        backgroundColor: "#334478",
+        position: "absolute",
+        bottom: 20,
+        right: 20,
+        padding: 20,
+        borderRadius: 20,
+        alignItems: "center",
+        justifyContent: "center",
+        elevation: 3,
+    },
+});
 export default Home;
