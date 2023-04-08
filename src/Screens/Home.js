@@ -14,7 +14,6 @@ const Home = () => {
 
     const styles = StyleSheet.create({
         container: {
-            backgroundColor: "#fff",
             backgroundColor: globalStyle.containerBgColor,
             paddingHorizontal: 10,
         },
@@ -49,7 +48,7 @@ const Home = () => {
             color: "#dde1f9",
         },
         greeting: {
-            marginBottom: 10,
+            marginBottom: 20,
         },
         name: {
             fontSize: 18,
@@ -75,42 +74,51 @@ const Home = () => {
             marginBottom: 20,
         },
         balance: {
-            alignItems: "center",
+            alignItems: "flex-start",
             marginBottom: 20,
         },
         balanceText: {
-            fontSize: 16,
+            fontSize: 14,
             color: "#bec5e8",
         },
         balanceAmount: {
-            fontSize: 30,
+            fontSize: 35,
             fontWeight: "bold",
             marginTop: 5,
             color: "#dbe1ff"
         },
-        incomeExpense: {
+        incomeExpenseSection: {
             flexDirection: "row",
             justifyContent: "space-between",
         },
-        income: {
-            alignItems: "center",
+        incomeExpenseContainer: {
+            // backgroundColor: "black",
         },
-        expense: {
+        incomeExpenseTitle: {
+            flexDirection: "row",
             alignItems: "center",
         },
         incomeExpenseText: {
-            fontSize: 16,
+            fontSize: 12,
             color: "#bec5e8",
         },
+        incomeIcon: {
+            color: globalStyle.green,
+        },
+        expenseIcon: {
+            color: globalStyle.red,
+        },
         incomeExpenseAmount: {
-            fontSize: 18,
-            marginTop: 5,
+            fontSize: 20,
+            paddingHorizontal:10,
+            color: "#dbe1ff",
+            justifyContent: "center",
         },
         incomeAmount: {
-            color: globalStyle.green
+            // color: globalStyle.green
         },
         expenseAmount: {
-            color: globalStyle.red
+            // color: globalStyle.red
         },
         filterButtons: {
             flexDirection: "row",
@@ -131,7 +139,7 @@ const Home = () => {
             borderRadius: 10,
         },
         filterText: {
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: "bold",
         },
         activeFilterText: {
@@ -142,43 +150,57 @@ const Home = () => {
         },
         transactions: {
         },
-        transaction: {
+        transactionContainer: {
             backgroundColor: globalStyle.secondaryBgColor,
-            paddingVertical: 15,
+            paddingVertical: 10,
             paddingHorizontal: 25,
             borderRadius: 25,
             flexDirection: "row",
             alignItems: "center",
-            justifyContent: "space-between",
+            // justifyContent: "space-around",
+            marginBottom: 10,
             // height: "16%"
         },
-        transactionIcon: {
-            width: 30,
-            height: 30,
-            marginRight: 10,
+        transactionIconContainer: {
+            // backgroundColor: "white",
+            width: "10%",
         },
-        transactionDetails: {
+        transactionIcon: {
+            color: "#e4e2e6"
+        },
+        transactionDetailsContainer: {
+            // backgroundColor: "red",
             paddingHorizontal: 10,
             flexDirection: "column",
             alignItems: "flex-start",
             justifyContent: "flex-start",
-            width: "60%",
+            width: "68%",
         },
         transactionName: {
             fontSize: 16,
-            fontWeight: "bold",
             marginBottom: 5,
+            color: "#ffffff",
         },
-        transactionInfo: {
+        transactionInfoContainer: {
+            // backgroundColor: "blue",
             flexDirection: "row",
             flexWrap: "wrap",
             justifyContent: "flex-start"
         },
-        transactionTime: {
+        transactionInfo: {
             fontSize: 14,
-            color: "#777",
+            color: "#c4c5c8",
+        },
+        transactionAmountContainer: {
+            width: "24%",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            // backgroundColor: "black",
         },
         transactionAmount: {
+            // backgroundColor:"brown",
+            
             fontSize: 18,
         },
         credit: {
@@ -211,13 +233,19 @@ const Home = () => {
                     <Text style={styles.balanceText}>Total Balance</Text>
                     <Text style={styles.balanceAmount}>$10,000</Text>
                 </View>
-                <View style={styles.incomeExpense}>
-                    <View style={styles.income}>
-                        <Text style={styles.incomeExpenseText}>Income</Text>
+                <View style={styles.incomeExpenseSection}>
+                    <View style={styles.incomeExpenseContainer}>
+                        <View style={styles.incomeExpenseTitle}>
+                            <Icon name="arrow-drop-down" size={24} style={styles.incomeIcon}/>
+                            <Text style={styles.incomeExpenseText}>Income</Text>
+                        </View>
                         <Text style={[styles.incomeExpenseAmount, styles.incomeAmount]}>+$5,000</Text>
                     </View>
-                    <View style={styles.expense}>
-                        <Text style={styles.incomeExpenseText}>Expense</Text>
+                    <View style={styles.incomeExpenseContainer}>
+                        <View style={styles.incomeExpenseTitle}>
+                            <Icon name="arrow-drop-up" size={24} style={styles.expenseIcon}/>
+                            <Text style={styles.incomeExpenseText}>Expense</Text>
+                        </View>
                         <Text style={[styles.incomeExpenseAmount, styles.expenseAmount]}>-$2,000</Text>
                     </View>
                 </View>
@@ -237,98 +265,100 @@ const Home = () => {
                 </TouchableOpacity>
             </ScrollView>
             <View style={styles.transactions}>
-                <View style={styles.transaction}>
-                    <View>
-                        <Icon name="home" size={24} />
+                <View style={styles.transactionContainer}>
+                    <View style={styles.transactionIconContainer}>
+                        <Icon name="home" size={24} style={styles.transactionIcon}/>
                     </View>
-                    <View style={styles.transactionDetails}>
+                    <View style={styles.transactionDetailsContainer}>
                         <Text style={styles.transactionName}>Salary</Text>
-                        <View style={styles.transactionInfo}>
-                            <Text style={styles.transactionTime}>VISA Debit Card</Text>
-                            <Text style={styles.transactionTime}>02 Sun</Text>
-                            <Text style={styles.transactionTime}>10:30 AM</Text>
+                        <View style={styles.transactionInfoContainer}>
+                            <Text style={styles.transactionInfo}>VISA Debit Card</Text>
+                            <Text style={styles.transactionInfo}> * </Text>
+                            <Text style={styles.transactionInfo}>02 Sun</Text>
+                            <Text style={styles.transactionInfo}> * </Text>
+                            <Text style={styles.transactionInfo}>10:30 AM</Text>
                         </View>
                     </View>
-                    <View>
+                    <View style={styles.transactionAmountContainer}>
                         <Text style={[styles.transactionAmount, styles.credit]}>+$35,000</Text>
                     </View>
                 </View>
-                <View style={styles.transaction}>
-                    <View>
-                        <Icon name="home" size={24} />
+                <View style={styles.transactionContainer}>
+                    <View style={styles.transactionIconContainer}>
+                        <Icon name="home" size={24} style={styles.transactionIcon}/>
                     </View>
-                    <View style={styles.transactionDetails}>
+                    <View style={styles.transactionDetailsContainer}>
                         <Text style={styles.transactionName}>Keyboard</Text>
-                        <View style={styles.transactionInfo}>
-                            <Text style={styles.transactionTime}>02 Sun</Text>
-                            <Text style={styles.transactionTime}>10:30 PM</Text>
+                        <View style={styles.transactionInfoContainer}>
+                            <Text style={styles.transactionInfo}>02 Sun</Text>
+                            <Text style={styles.transactionInfo}>10:30 PM</Text>
                         </View>
                     </View>
-                    <View>
+                    <View style={styles.transactionAmountContainer}>
                         <Text style={[styles.transactionAmount, styles.debit]}>-$12,000</Text>
                     </View>
                 </View>
-                <View style={styles.transaction}>
-                    <View>
-                        <Icon name="home" size={24} />
+                <View style={styles.transactionContainer}>
+                    <View style={styles.transactionIconContainer}>
+                        <Icon name="home" size={24} style={styles.transactionIcon}/>
                     </View>
-                    <View style={styles.transactionDetails}>
+                    <View style={styles.transactionDetailsContainer}>
                         <Text style={styles.transactionName}>Bottle</Text>
-                        <View style={styles.transactionInfo}>
-                            <Text style={styles.transactionTime}>Cash</Text>
-                            <Text style={styles.transactionTime}>02 Sun</Text>
-                            <Text style={styles.transactionTime}>10:30 AM</Text>
+                        <View style={styles.transactionInfoContainer}>
+                            <Text style={styles.transactionInfo}>Cash</Text>
+                            <Text style={styles.transactionInfo}>02 Sun</Text>
+                            <Text style={styles.transactionInfo}>10:30 AM</Text>
                         </View>
                     </View>
-                    <View>
+                    <View style={styles.transactionAmountContainer}>
                         <Text style={[styles.transactionAmount, styles.debit]}>-$100</Text>
                     </View>
                 </View>
-                <View style={styles.transaction}>
-                    <View>
-                        <Icon name="home" size={24} />
+                <View style={styles.transactionContainer}>
+                    <View style={styles.transactionIconContainer}>
+                        <Icon name="home" size={24} style={styles.transactionIcon}/>
                     </View>
-                    <View style={styles.transactionDetails}>
+                    <View style={styles.transactionDetailsContainer}>
                         <Text style={styles.transactionName}>Bottle</Text>
-                        <View style={styles.transactionInfo}>
-                            <Text style={styles.transactionTime}>Cash</Text>
-                            <Text style={styles.transactionTime}>02 Sun</Text>
-                            <Text style={styles.transactionTime}>10:30 AM</Text>
+                        <View style={styles.transactionInfoContainer}>
+                            <Text style={styles.transactionInfo}>Cash</Text>
+                            <Text style={styles.transactionInfo}>02 Sun</Text>
+                            <Text style={styles.transactionInfo}>10:30 AM</Text>
                         </View>
                     </View>
-                    <View>
+                    <View style={styles.transactionAmountContainer}>
                         <Text style={[styles.transactionAmount, styles.debit]}>-$100</Text>
                     </View>
                 </View>
-                <View style={styles.transaction}>
-                    <View>
-                        <Icon name="home" size={24} />
+                <View style={styles.transactionContainer}>
+                    <View style={styles.transactionIconContainer}>
+                        <Icon name="home" size={24} style={styles.transactionIcon}/>
                     </View>
-                    <View style={styles.transactionDetails}>
+                    <View style={styles.transactionDetailsContainer}>
                         <Text style={styles.transactionName}>Bottle</Text>
-                        <View style={styles.transactionInfo}>
-                            <Text style={styles.transactionTime}>Cash</Text>
-                            <Text style={styles.transactionTime}>02 Sun</Text>
-                            <Text style={styles.transactionTime}>10:30 AM</Text>
+                        <View style={styles.transactionInfoContainer}>
+                            <Text style={styles.transactionInfo}>Cash</Text>
+                            <Text style={styles.transactionInfo}>02 Sun</Text>
+                            <Text style={styles.transactionInfo}>10:30 AM</Text>
                         </View>
                     </View>
-                    <View>
+                    <View style={styles.transactionAmountContainer}>
                         <Text style={[styles.transactionAmount, styles.debit]}>-$100</Text>
                     </View>
                 </View>
-                <View style={styles.transaction}>
-                    <View>
-                        <Icon name="home" size={24} />
+                <View style={styles.transactionContainer}>
+                    <View style={styles.transactionIconContainer}>
+                        <Icon name="home" size={24} style={styles.transactionIcon}/>
                     </View>
-                    <View style={styles.transactionDetails}>
+                    <View style={styles.transactionDetailsContainer}>
                         <Text style={styles.transactionName}>Bottle</Text>
-                        <View style={styles.transactionInfo}>
-                            <Text style={styles.transactionTime}>Cash</Text>
-                            <Text style={styles.transactionTime}>02 Sun</Text>
-                            <Text style={styles.transactionTime}>10:30 AM</Text>
+                        <View style={styles.transactionInfoContainer}>
+                            <Text style={styles.transactionInfo}>Cash</Text>
+                            <Text style={styles.transactionInfo}>02 Sun</Text>
+                            <Text style={styles.transactionInfo}>10:30 AM</Text>
                         </View>
                     </View>
-                    <View>
+                    <View style={styles.transactionAmountContainer}>
                         <Text style={[styles.transactionAmount, styles.debit]}>-$100</Text>
                     </View>
                 </View>
