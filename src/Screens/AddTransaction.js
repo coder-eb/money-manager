@@ -4,8 +4,8 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { format } from "date-fns";
 import { SyncedRealmContext } from "../RealmConfig";
-import { createTransaction } from "../Repositories/TransactionRepository";
 import { globalStyle } from "../common/theme";
+import { insertRecord } from "../common/database";
 
 const AddTransaction = ({ navigation }) => {
     const [type, setType] = useState("debit");
@@ -51,7 +51,7 @@ const AddTransaction = ({ navigation }) => {
         // Add transaction logic here
         const amt = parseInt(amount);
         const record = { name, amount: amt, descr, type, date };
-        createTransaction(realm, record);
+        insertRecord(realm, record, "Transaction");
         navigation.goBack();
     };
 
