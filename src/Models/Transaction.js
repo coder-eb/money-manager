@@ -5,7 +5,7 @@ export class Transaction extends Realm.Object {
     static schema = {
         name: "Transaction",
         properties: {
-            _id: { type: "uuid", default: new Realm.BSON.UUID()},
+            _id: "objectId",
             name: "string",
             descr: "string?",
             amount: "float",
