@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { format } from "date-fns";
 import { SyncedRealmContext } from "../RealmConfig";
 import { createTransaction } from "../Repositories/TransactionRepository";
+import { GlobalStyleContext } from "../../App";
 
 const AddTransaction = () => {
+    const globalStyle = useContext(GlobalStyleContext);
+
     const [type, setType] = useState("debit");
     const [name, setName] = useState("");
     const [descr, setDescr] = useState("");
@@ -64,8 +67,8 @@ const AddTransaction = () => {
     const styles = StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: "#1b1b1f",
-            padding: 20,
+            backgroundColor: globalStyle.containerBgColor,
+            padding: 10,
         },
         header: {
             flexDirection: "row",
@@ -86,23 +89,22 @@ const AddTransaction = () => {
         button: {
             paddingVertical: 12,
             paddingHorizontal: 20,
-            borderRadius: 5,
             marginRight: 10,
             alignItems: "center",
         },
         activeButton: {
-            backgroundColor: "#b4c4ff",
+            backgroundColor: globalStyle.activeButtonBgColor,
             borderRadius: 25,
         },
         inactiveButton: {
-            backgroundColor: "#45464f",
+            backgroundColor: globalStyle.inactiveButtonBgColor,
             borderRadius: 10,
         },
         activeButtonText: {
-            color: "#1b2d61",
+            color: globalStyle.activeButtonTextColor,
         },
         inactiveButtonText: {
-            color: "#c4c4ce",
+            color: globalStyle.inactiveButtonTextColor,
         },
         buttonText: {
             fontSize: 14,
@@ -112,7 +114,7 @@ const AddTransaction = () => {
             flex: 1,
         },
         input: {
-            backgroundColor: "#45464f",
+            backgroundColor: globalStyle.secondaryBgColor,
             paddingVertical: 12,
             paddingHorizontal: 20,
             marginBottom: 15,
@@ -157,7 +159,7 @@ const AddTransaction = () => {
             marginTop: 30,
         },
     });
-
+    
     return (
         <View style={styles.container}>
             <View style={styles.header}>
