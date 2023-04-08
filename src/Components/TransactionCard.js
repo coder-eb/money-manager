@@ -54,7 +54,7 @@ const TransactionCard = ({ record }) => {
             color: "#c4c5c8",
         },
         transactionAmountContainer: {
-            width: "24%",
+            width: "26%",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "flex-end",

@@ -12,15 +12,14 @@ const Home = () => {
 
     const styles = StyleSheet.create({
         container: {
+            flex: 1,
             backgroundColor: globalStyle.containerBgColor,
             paddingHorizontal: 10,
         },
         header: {
             flexDirection: "row",
-            alignItems: "center",
             justifyContent: "space-between",
-            marginTop: 10,
-            marginBottom: 10,
+            margin: 10,
         },
         headerLeft: {
             flexDirection: "row",
@@ -72,7 +71,6 @@ const Home = () => {
             marginBottom: 20,
         },
         balance: {
-            alignItems: "flex-start",
             marginBottom: 20,
         },
         balanceText: {
@@ -119,8 +117,6 @@ const Home = () => {
             // color: globalStyle.red
         },
         filterButtons: {
-            flexDirection: "row",
-            justifyContent: "flex-start",
             marginBottom: 20,
         },
         filterButton: {
@@ -189,20 +185,22 @@ const Home = () => {
                     </View>
                 </View>
             </View>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterButtons}>
-                <TouchableOpacity style={[styles.filterButton, filterType === "today" ? styles.activeFilterButton : styles.inactiveFilterButton]} onPress={() => setFilterType('today')}>
-                    <Text style={[styles.filterText, filterType === "today" ? styles.activeFilterText : styles.inactiveFilterText]}>Today</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.filterButton, filterType === "this_week" ? styles.activeFilterButton : styles.inactiveFilterButton]} onPress={() => setFilterType('this_week')}>
-                    <Text style={[styles.filterText, filterType === "this_week" ? styles.activeFilterText : styles.inactiveFilterText]}>This Week</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.filterButton, filterType === "this_month" ? styles.activeFilterButton : styles.inactiveFilterButton]} onPress={() => setFilterType('this_month')}>
-                    <Text style={[styles.filterText, filterType === "this_month" ? styles.activeFilterText : styles.inactiveFilterText]}>This Month</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.filterButton, filterType === "this_year" ? styles.activeFilterButton : styles.inactiveFilterButton]} onPress={() => setFilterType('this_year')}>
-                    <Text style={[styles.filterText, filterType === "this_year" ? styles.activeFilterText : styles.inactiveFilterText]}>This Year</Text>
-                </TouchableOpacity>
-            </ScrollView>
+            <View>
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterButtons}>
+                    <TouchableOpacity style={[styles.filterButton, filterType === "today" ? styles.activeFilterButton : styles.inactiveFilterButton]} onPress={() => setFilterType('today')}>
+                        <Text style={[styles.filterText, filterType === "today" ? styles.activeFilterText : styles.inactiveFilterText]}>Today</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.filterButton, filterType === "this_week" ? styles.activeFilterButton : styles.inactiveFilterButton]} onPress={() => setFilterType('this_week')}>
+                        <Text style={[styles.filterText, filterType === "this_week" ? styles.activeFilterText : styles.inactiveFilterText]}>This Week</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.filterButton, filterType === "this_month" ? styles.activeFilterButton : styles.inactiveFilterButton]} onPress={() => setFilterType('this_month')}>
+                        <Text style={[styles.filterText, filterType === "this_month" ? styles.activeFilterText : styles.inactiveFilterText]}>This Month</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.filterButton, filterType === "this_year" ? styles.activeFilterButton : styles.inactiveFilterButton]} onPress={() => setFilterType('this_year')}>
+                        <Text style={[styles.filterText, filterType === "this_year" ? styles.activeFilterText : styles.inactiveFilterText]}>This Year</Text>
+                    </TouchableOpacity>
+                </ScrollView>
+            </View>
             <View style={styles.transactions}>
                 <TransactionCard record={{name: 'Salary', date: new Date(), amount: 35000, type: 'credit'}}/>
                 <TransactionCard record={{name: 'Keyboard', date: new Date(), amount: 12000, type: 'debit'}}/>
