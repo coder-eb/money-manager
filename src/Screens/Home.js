@@ -62,14 +62,8 @@ const Home = () => {
         balanceCard: {
             backgroundColor: globalStyle.primaryBgColor,
             borderRadius: 15,
-            shadowColor: "#000",
-            shadowOffset: {
-                width: 0,
-                height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
+            // elevation: 5,
+            // shadowColor: 'white',
             padding: 15,
             marginBottom: 20,
         },
@@ -155,6 +149,7 @@ const Home = () => {
             borderRadius: 20,
             alignItems: "center",
             justifyContent: "center",
+            elevation: 3,
         },
     });
 
