@@ -1,12 +1,21 @@
 import React, { useState } from "react";
-import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, ScrollView, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import TransactionCard from "../Components/TransactionCard";
 import { formatAmount } from "../common/helpers";
 import { globalStyle } from "../common/theme";
+import { SyncedRealmContext } from "../RealmConfig";
+import { findAll } from "../common/database";
+import { Transaction } from "../Models/Transaction";
 
 const Home = ({ navigation }) => {
     const [filterType, setFilterType] = useState("today");
+
+    const { useQuery } = SyncedRealmContext;
+
+    const transactions = findAll(useQuery, Transaction);
+    console.log("transactions");
+    console.log(transactions);
 
     return (
         <View style={styles.container}>
@@ -50,30 +59,54 @@ const Home = ({ navigation }) => {
                 </View>
                 <View>
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterButtons}>
-                        <TouchableOpacity style={[styles.filterButton, filterType === "today" ? styles.activeFilterButton : styles.inactiveFilterButton]} onPress={() => setFilterType("today")}>
-                            <Text style={[styles.filterText, filterType === "today" ? styles.activeFilterText : styles.inactiveFilterText]}>Today</Text>
+                        <TouchableOpacity
+                            style={[styles.filterButton, filterType === "today" ? styles.activeFilterButton : styles.inactiveFilterButton]}
+                            onPress={() => setFilterType("today")}
+                        >
+                            <Text style={[styles.filterText, filterType === "today" ? styles.activeFilterText : styles.inactiveFilterText]}>
+                                Today
+                            </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.filterButton, filterType === "this_week" ? styles.activeFilterButton : styles.inactiveFilterButton]} onPress={() => setFilterType("this_week")}>
-                            <Text style={[styles.filterText, filterType === "this_week" ? styles.activeFilterText : styles.inactiveFilterText]}>This Week</Text>
+                        <TouchableOpacity
+                            style={[styles.filterButton, filterType === "this_week" ? styles.activeFilterButton : styles.inactiveFilterButton]}
+                            onPress={() => setFilterType("this_week")}
+                        >
+                            <Text style={[styles.filterText, filterType === "this_week" ? styles.activeFilterText : styles.inactiveFilterText]}>
+                                This Week
+                            </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.filterButton, filterType === "this_month" ? styles.activeFilterButton : styles.inactiveFilterButton]} onPress={() => setFilterType("this_month")}>
-                            <Text style={[styles.filterText, filterType === "this_month" ? styles.activeFilterText : styles.inactiveFilterText]}>This Month</Text>
+                        <TouchableOpacity
+                            style={[styles.filterButton, filterType === "this_month" ? styles.activeFilterButton : styles.inactiveFilterButton]}
+                            onPress={() => setFilterType("this_month")}
+                        >
+                            <Text style={[styles.filterText, filterType === "this_month" ? styles.activeFilterText : styles.inactiveFilterText]}>
+                                This Month
+                            </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.filterButton, filterType === "this_year" ? styles.activeFilterButton : styles.inactiveFilterButton]} onPress={() => setFilterType("this_year")}>
-                            <Text style={[styles.filterText, filterType === "this_year" ? styles.activeFilterText : styles.inactiveFilterText]}>This Year</Text>
+                        <TouchableOpacity
+                            style={[styles.filterButton, filterType === "this_year" ? styles.activeFilterButton : styles.inactiveFilterButton]}
+                            onPress={() => setFilterType("this_year")}
+                        >
+                            <Text style={[styles.filterText, filterType === "this_year" ? styles.activeFilterText : styles.inactiveFilterText]}>
+                                This Year
+                            </Text>
                         </TouchableOpacity>
                     </ScrollView>
                 </View>
                 <View style={styles.transactions}>
-                    <TransactionCard record={{ name: "Salary", date: new Date(), amount: 35000, type: "credit" }} />
-                    <TransactionCard record={{ name: "Keyboard", date: new Date(), amount: 12000, type: "debit" }} />
-                    <TransactionCard record={{ name: "Bottle", date: new Date(), amount: 500, type: "debit" }} />
-                    <TransactionCard record={{ name: "Bottle", date: new Date(), amount: 500, type: "debit" }} />
-                    <TransactionCard record={{ name: "Bottle", date: new Date(), amount: 500, type: "debit" }} />
-                    <TransactionCard record={{ name: "Bottle", date: new Date(), amount: 500, type: "debit" }} />
-                    <TransactionCard record={{ name: "Bottle", date: new Date(), amount: 500, type: "debit" }} />
-                    <TransactionCard record={{ name: "Bottle", date: new Date(), amount: 500, type: "debit" }} />
-                    <TransactionCard record={{ name: "Bottle", date: new Date(), amount: 500, type: "debit" }} />
+                    {transactions.map((transaction) => (
+                        <TouchableOpacity key={transaction._id} onPress={() => navigation.navigate("AddTransaction")}>
+                            <TransactionCard
+                                record={{
+                                    id: transaction._id,
+                                    name: transaction.name,
+                                    date: transaction.date,
+                                    amount: transaction.amount,
+                                    type: transaction.type,
+                                }}
+                            />
+                        </TouchableOpacity>
+                    ))}
                 </View>
             </ScrollView>
             <TouchableOpacity onPress={() => navigation.navigate("AddTransaction")} style={styles.addButton}>

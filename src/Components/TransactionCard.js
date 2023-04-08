@@ -36,19 +36,15 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         flexDirection: "row",
         alignItems: "center",
-        // justifyContent: "space-around",
         marginBottom: 10,
-        // height: "16%"
     },
     transactionIconContainer: {
-        // backgroundColor: "white",
         width: "10%",
     },
     transactionIcon: {
         color: "#e4e2e6",
     },
     transactionDetailsContainer: {
-        // backgroundColor: "red",
         paddingHorizontal: 10,
         flexDirection: "column",
         alignItems: "flex-start",
@@ -61,7 +57,6 @@ const styles = StyleSheet.create({
         color: "#ffffff",
     },
     transactionInfoContainer: {
-        // backgroundColor: "blue",
         flexDirection: "row",
         flexWrap: "wrap",
         justifyContent: "flex-start",
@@ -75,11 +70,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "flex-end",
-        // backgroundColor: "black",
     },
     transactionAmount: {
-        // backgroundColor:"brown",
-
         fontSize: 18,
     },
     credit: {

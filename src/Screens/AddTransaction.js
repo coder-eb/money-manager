@@ -50,8 +50,9 @@ const AddTransaction = ({ navigation }) => {
     const handleAddTransaction = () => {
         // Add transaction logic here
         const amt = parseInt(amount);
-        const record = { realm, name, amount: amt, descr, type, date };
-        createTransaction(record);
+        const record = { name, amount: amt, descr, type, date };
+        createTransaction(realm, record);
+        navigation.goBack();
     };
 
     const handleInputFocus = (inputId) => {
