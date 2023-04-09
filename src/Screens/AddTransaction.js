@@ -245,6 +245,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderColor: "#acacb6",
         fontSize: 16,
+        color: "#ffffff",
     },
     focusedInput: {
         borderWidth: 2,
