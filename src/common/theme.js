@@ -9,4 +9,6 @@ export const globalStyle = {
     offwhite: "#eeeeee",
     green: "#66bb6a",
     red: "#ef5350",
+    errorBgColor: "#900035",
+    errorTextColor: "#ffb2cb",
 };

@@ -5,17 +5,18 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { format } from "date-fns";
 import { SyncedRealmContext } from "../RealmConfig";
 import { globalStyle } from "../common/theme";
-import { insertRecord, updateRecord } from "../common/database";
 import { Transaction } from "../Models/Transaction";
-import { getTransaction } from "../Repositories/TransactionRepository";
+import { getTransaction, upsertTransaction } from "../Repositories/TransactionRepository";
+import Snackbar from "react-native-snackbar";
 
 const AddTransaction = ({ route, navigation }) => {
-    const { id } = route.params;
-    const actionTitle = id ? 'Update' : 'Add';
+    const { _id } = route.params;
+    const action = _id ? 'update' : 'create';
+    const actionTitle = _id ? 'Update' : 'Add';
 
     const { useRealm, useObject } = SyncedRealmContext;
     const realm = useRealm();
-    const record = getTransaction(useObject, id, Transaction);
+    const record = getTransaction(useObject, _id, Transaction);
 
     const { name:initName="", amount:initAmount="", descr:initDescr="", type:initType="debit", date:initDate=new Date() } = record;
     
@@ -59,13 +60,17 @@ const AddTransaction = ({ route, navigation }) => {
     const handleAddTransaction = () => {
         // Add transaction logic here
         const amt = parseInt(amount);
-        let record = { name, amount: amt, descr, type, date };
-        if(id) {
-            record['_id'] = new Realm.BSON.ObjectID(id);
-            updateRecord(realm, record, "Transaction");
-        }
-        else {
-            insertRecord(realm, record, "Transaction");
+        const record = { _id: _id, name, amount: amt, descr, type, date };
+        let errorMsg = upsertTransaction(realm, record, action);
+        
+        if (errorMsg) {
+            Snackbar.show({
+                text: errorMsg,
+                duration: Snackbar.LENGTH_SHORT,
+                textColor: globalStyle.errorTextColor,
+                backgroundColor: globalStyle.errorBgColor,
+            });
+            return;        
         }
         navigation.goBack();
     };
@@ -98,7 +103,7 @@ const AddTransaction = ({ route, navigation }) => {
             <View style={styles.inputs}>
                 <TextInput style={[styles.input, focusedInput == "name" && styles.focusedInput]} onFocus={() => handleInputFocus("name")} onBlur={handleInputBlur} onChangeText={(text) => setName(text)} value={name} placeholderTextColor={"#b5b5b9"} placeholder={type == "debit" ? "Expense Name" : "Income Name"} />
                 <TextInput style={[styles.input, focusedInput == "descr" && styles.focusedInput]} onFocus={() => handleInputFocus("descr")} onBlur={handleInputBlur} onChangeText={(text) => setDescr(text)} value={descr} placeholderTextColor={"#b5b5b9"} placeholder="Description" />
-                <TextInput keyboardType={"numeric"} style={[styles.input, focusedInput == "amount" && styles.focusedInput]} onFocus={() => handleInputFocus("amount")} onBlur={handleInputBlur} onChangeText={(text) => setAmount(text)} value={amount} placeholderTextColor={"#b5b5b9"} placeholder="Amount" />
+                <TextInput keyboardType={"numeric"} maxLength={13} style={[styles.input, focusedInput == "amount" && styles.focusedInput]} onFocus={() => handleInputFocus("amount")} onBlur={handleInputBlur} onChangeText={(text) => setAmount(text)} value={amount} placeholderTextColor={"#b5b5b9"} placeholder="Amount" />
                 <View style={styles.datePickerSection}>
                     <TouchableOpacity style={styles.dateTimeButton} onPress={showDatePicker}>
                         <Icon name="event" size={24} style={styles.dateTimeIcon} />

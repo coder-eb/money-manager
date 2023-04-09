@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, ScrollView, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
+import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import TransactionCard from "../Components/TransactionCard";
 import { formatAmount } from "../common/helpers";
@@ -93,7 +93,7 @@ const Home = ({ navigation }) => {
                 </View>
                 <View style={styles.transactions}>
                     {transactions.map((transaction) => (
-                        <TouchableOpacity key={transaction._id} onPress={() => navigation.navigate("AddTransaction", { id: transaction._id.toString() })}>
+                        <TouchableOpacity key={transaction._id} onPress={() => navigation.navigate("AddTransaction", { _id: transaction._id.toString() })}>
                             <TransactionCard
                                 record={{
                                     name: transaction.name,
@@ -106,7 +106,7 @@ const Home = ({ navigation }) => {
                     ))}
                 </View>
             </ScrollView>
-            <TouchableOpacity onPress={() => navigation.navigate("AddTransaction", { id: null })} style={styles.addButton}>
+            <TouchableOpacity onPress={() => navigation.navigate("AddTransaction", { _id: null })} style={styles.addButton}>
                 <Icon name="add" size={32} color="#dbe1ff" />
             </TouchableOpacity>
         </View>
