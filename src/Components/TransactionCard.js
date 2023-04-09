@@ -16,7 +16,7 @@ const TransactionCard = ({ record }) => {
             <View style={styles.transactionDetailsContainer}>
                 <Text style={styles.transactionName}>{name}</Text>
                 <View style={styles.transactionInfoContainer}>
-                    <Text style={styles.transactionInfo}>{format(date, "dd E")}</Text>
+                    <Text style={styles.transactionInfo}>{format(date, "E, MMM do")}</Text>
                     <Text style={styles.transactionInfo}> • </Text>
                     <Text style={styles.transactionInfo}>{format(date, "hh:mm a")}</Text>
                 </View>
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         alignItems: "flex-start",
         justifyContent: "flex-start",
-        width: "66%",
+        width: "62%",
     },
     transactionName: {
         fontSize: 16,
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         color: "#c4c5c8",
     },
     transactionAmountContainer: {
-        width: "26%",
+        width: "30%",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "flex-end",
