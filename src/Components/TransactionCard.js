@@ -39,17 +39,20 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     transactionIconContainer: {
-        width: "10%",
+        width: "8%",
+        flexDirection: "row",
+        justifyContent: "flex-start",
     },
     transactionIcon: {
         color: "#e4e2e6",
     },
     transactionDetailsContainer: {
-        paddingHorizontal: 10,
+        paddingLeft: 25,
+        paddingRight: 10,
         flexDirection: "column",
         alignItems: "flex-start",
         justifyContent: "flex-start",
-        width: "68%",
+        width: "66%",
     },
     transactionName: {
         fontSize: 16,
