@@ -44,8 +44,8 @@ const Home = ({ navigation }) => {
                         <Text style={styles.balanceText}>Total Balance</Text>
                         <Text style={styles.balanceAmount}>{formatAmount(totBalance, "balance", false)}</Text>
                     </View>
-                    <View style={{justifyContent: "center"}}>
-                        <Text>{titleCase(filterType)}</Text>
+                    <View style={styles.filterTypeSection}>
+                        <Text style={styles.filterTypeText}>{titleCase(filterType)}</Text>
                     </View>
                     <View style={styles.incomeExpenseSection}>
                         <View style={styles.incomeExpenseContainer}>
@@ -199,6 +199,11 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         marginTop: 5,
         color: "#dbe1ff",
+    },
+    filterTypeSection: {
+    },
+    filterTypeText: {
+        color: "#bec5e8",
     },
     incomeExpenseSection: {
         flexDirection: "row",
