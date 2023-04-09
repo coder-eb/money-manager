@@ -5,20 +5,29 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { format } from "date-fns";
 import { SyncedRealmContext } from "../RealmConfig";
 import { globalStyle } from "../common/theme";
-import { insertRecord } from "../common/database";
+import { insertRecord, updateRecord } from "../common/database";
+import { Transaction } from "../Models/Transaction";
+import { getTransaction } from "../Repositories/TransactionRepository";
 
-const AddTransaction = ({ navigation }) => {
-    const [type, setType] = useState("debit");
-    const [name, setName] = useState("");
-    const [descr, setDescr] = useState("");
-    const [amount, setAmount] = useState("");
-    const [date, setDate] = useState(new Date());
+const AddTransaction = ({ route, navigation }) => {
+    const { id } = route.params;
+    const actionTitle = id ? 'Update' : 'Add';
+
+    const { useRealm, useObject } = SyncedRealmContext;
+    const realm = useRealm();
+    const record = getTransaction(useObject, id, Transaction);
+
+    const { name:initName="", amount:initAmount="", descr:initDescr="", type:initType="debit", date:initDate=new Date() } = record;
+    
+    const [type, setType] = useState(initType);
+    const [name, setName] = useState(initName);
+    const [descr, setDescr] = useState(initDescr);
+    const [amount, setAmount] = useState(initAmount.toString());
+    const [date, setDate] = useState(initDate);
     const [mode, setMode] = useState("date");
     const [show, setShow] = useState(false);
     const [focusedInput, setFocusedInput] = useState("");
 
-    const { useRealm } = SyncedRealmContext;
-    const realm = useRealm();
 
     const handleDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -50,8 +59,14 @@ const AddTransaction = ({ navigation }) => {
     const handleAddTransaction = () => {
         // Add transaction logic here
         const amt = parseInt(amount);
-        const record = { name, amount: amt, descr, type, date };
-        insertRecord(realm, record, "Transaction");
+        let record = { name, amount: amt, descr, type, date };
+        if(id) {
+            record['_id'] = new Realm.BSON.ObjectID(id);
+            updateRecord(realm, record, "Transaction");
+        }
+        else {
+            insertRecord(realm, record, "Transaction");
+        }
         navigation.goBack();
     };
 
@@ -69,7 +84,7 @@ const AddTransaction = ({ navigation }) => {
                 <TouchableOpacity onPress={navigation.goBack}>
                     <Icon name="arrow-back" size={24} color="#e4e2e6" />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>{type == "debit" ? "Add Expense" : "Add Income"}</Text>
+                <Text style={styles.headerTitle}>{type == "debit" ? `${actionTitle} Expense` : `${actionTitle} Income`}</Text>
                 <View />
             </View>
             <View style={styles.buttons}>
@@ -97,7 +112,7 @@ const AddTransaction = ({ navigation }) => {
             </View>
             {show && <DateTimePicker value={date} mode={mode} is24Hour={true} display="default" onChange={handleDateChange} maximumDate={new Date()} />}
             <TouchableOpacity style={styles.addButton} onPress={handleAddTransaction}>
-                <Text style={styles.addButtonText}>Add</Text>
+                <Text style={styles.addButtonText}>{actionTitle}</Text>
             </TouchableOpacity>
         </View>
     );
