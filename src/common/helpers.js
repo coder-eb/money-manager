@@ -44,3 +44,7 @@ export const performValidation = (record, Model) => {
         if (isRequired && !isValidValue(type, value)) return errorMsg;
     }
 };
+
+export const titleCase = (s) => {
+  return s.replace(/^_*(.)|_+(.)/g, (s, c, d) => c ? c.toUpperCase() : ' ' + d.toUpperCase())
+}

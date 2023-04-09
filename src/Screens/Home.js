@@ -2,18 +2,24 @@ import React, { useState } from "react";
 import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import TransactionCard from "../Components/TransactionCard";
-import { formatAmount } from "../common/helpers";
+import { formatAmount, titleCase } from "../common/helpers";
 import { globalStyle } from "../common/theme";
 import { SyncedRealmContext } from "../RealmConfig";
 import { findAll } from "../common/database";
 import { Transaction } from "../Models/Transaction";
+import { getFilteredTransactions, getTotCreditNDebit, getTotalBalance } from "../Repositories/TransactionRepository";
 
 const Home = ({ navigation }) => {
-    const [filterType, setFilterType] = useState("today");
+    const [filterType, setFilterType] = useState("this_month");
 
     const { useQuery } = SyncedRealmContext;
 
-    const transactions = findAll(useQuery, Transaction);
+    const allTransactions = findAll(useQuery, Transaction);
+    let filteredTransactions = getFilteredTransactions(filterType, allTransactions);
+    filteredTransactions = filteredTransactions.sorted("date", true);
+    
+    const totBalance = getTotalBalance(allTransactions);
+    const [totCredit, totDebit] = getTotCreditNDebit(filteredTransactions);    
 
     return (
         <View style={styles.container}>
@@ -36,7 +42,10 @@ const Home = ({ navigation }) => {
                 <View style={styles.balanceCard}>
                     <View style={styles.balance}>
                         <Text style={styles.balanceText}>Total Balance</Text>
-                        <Text style={styles.balanceAmount}>{formatAmount(40000, "balance", false)}</Text>
+                        <Text style={styles.balanceAmount}>{formatAmount(totBalance, "balance", false)}</Text>
+                    </View>
+                    <View style={{justifyContent: "center"}}>
+                        <Text>{titleCase(filterType)}</Text>
                     </View>
                     <View style={styles.incomeExpenseSection}>
                         <View style={styles.incomeExpenseContainer}>
@@ -44,14 +53,14 @@ const Home = ({ navigation }) => {
                                 <Icon name="arrow-drop-down" size={24} style={styles.incomeIcon} />
                                 <Text style={styles.incomeExpenseText}>Income</Text>
                             </View>
-                            <Text style={[styles.incomeExpenseAmount, styles.incomeAmount]}>{formatAmount(5000, "credit")}</Text>
+                            <Text style={[styles.incomeExpenseAmount, styles.incomeAmount]}>{formatAmount(totCredit, "credit")}</Text>
                         </View>
                         <View style={styles.incomeExpenseContainer}>
                             <View style={styles.incomeExpenseTitle}>
                                 <Icon name="arrow-drop-up" size={24} style={styles.expenseIcon} />
                                 <Text style={styles.incomeExpenseText}>Expense</Text>
                             </View>
-                            <Text style={[styles.incomeExpenseAmount, styles.expenseAmount]}>{formatAmount(2000, "debit")}</Text>
+                            <Text style={[styles.incomeExpenseAmount, styles.expenseAmount]}>{formatAmount(totDebit, "debit")}</Text>
                         </View>
                     </View>
                 </View>
@@ -62,7 +71,7 @@ const Home = ({ navigation }) => {
                             onPress={() => setFilterType("today")}
                         >
                             <Text style={[styles.filterText, filterType === "today" ? styles.activeFilterText : styles.inactiveFilterText]}>
-                                Today
+                                {titleCase("today")}
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
@@ -70,7 +79,7 @@ const Home = ({ navigation }) => {
                             onPress={() => setFilterType("this_week")}
                         >
                             <Text style={[styles.filterText, filterType === "this_week" ? styles.activeFilterText : styles.inactiveFilterText]}>
-                                This Week
+                                {titleCase("this_week")}
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
@@ -78,7 +87,7 @@ const Home = ({ navigation }) => {
                             onPress={() => setFilterType("this_month")}
                         >
                             <Text style={[styles.filterText, filterType === "this_month" ? styles.activeFilterText : styles.inactiveFilterText]}>
-                                This Month
+                                {titleCase("this_month")}
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
@@ -86,13 +95,21 @@ const Home = ({ navigation }) => {
                             onPress={() => setFilterType("this_year")}
                         >
                             <Text style={[styles.filterText, filterType === "this_year" ? styles.activeFilterText : styles.inactiveFilterText]}>
-                                This Year
+                                {titleCase("this_year")}
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.filterButton, filterType === "all_time" ? styles.activeFilterButton : styles.inactiveFilterButton]}
+                            onPress={() => setFilterType("all_time")}
+                        >
+                            <Text style={[styles.filterText, filterType === "all_time" ? styles.activeFilterText : styles.inactiveFilterText]}>
+                                {titleCase("all_time")}
                             </Text>
                         </TouchableOpacity>
                     </ScrollView>
                 </View>
                 <View style={styles.transactions}>
-                    {transactions.map((transaction) => (
+                    {filteredTransactions.map((transaction) => (
                         <TouchableOpacity key={transaction._id} onPress={() => navigation.navigate("AddTransaction", { _id: transaction._id.toString() })}>
                             <TransactionCard
                                 record={{
