@@ -14,8 +14,6 @@ const Home = ({ navigation }) => {
     const { useQuery } = SyncedRealmContext;
 
     const transactions = findAll(useQuery, Transaction);
-    console.log("transactions");
-    console.log(transactions);
 
     return (
         <View style={styles.container}>
@@ -95,10 +93,9 @@ const Home = ({ navigation }) => {
                 </View>
                 <View style={styles.transactions}>
                     {transactions.map((transaction) => (
-                        <TouchableOpacity key={transaction._id} onPress={() => navigation.navigate("AddTransaction")}>
+                        <TouchableOpacity key={transaction._id} onPress={() => navigation.navigate("AddTransaction", { id: transaction._id.toString() })}>
                             <TransactionCard
                                 record={{
-                                    id: transaction._id,
                                     name: transaction.name,
                                     date: transaction.date,
                                     amount: transaction.amount,
@@ -109,7 +106,7 @@ const Home = ({ navigation }) => {
                     ))}
                 </View>
             </ScrollView>
-            <TouchableOpacity onPress={() => navigation.navigate("AddTransaction")} style={styles.addButton}>
+            <TouchableOpacity onPress={() => navigation.navigate("AddTransaction", { id: null })} style={styles.addButton}>
                 <Icon name="add" size={32} color="#dbe1ff" />
             </TouchableOpacity>
         </View>

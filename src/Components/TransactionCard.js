@@ -7,7 +7,7 @@ import { globalStyle } from "../common/theme";
 
 const TransactionCard = ({ record }) => {
     const { name, amount, descr, type, date } = record;
-
+    
     return (
         <View style={styles.transactionContainer}>
             <View style={styles.transactionIconContainer}>

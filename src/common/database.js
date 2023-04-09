@@ -11,3 +11,13 @@ export const insertRecord = ( dbCon, record, Model) => {
         dbCon.create(Model, record);
     });
 };
+
+export const updateRecord = ( dbCon, record, Model) => {
+    dbCon.write(() => {
+        dbCon.create(Model, record, 'modified');
+    });
+};
+
+export const findOne = ( dbCon, _id, Model) => {
+    return dbCon(Model, _id);
+};
