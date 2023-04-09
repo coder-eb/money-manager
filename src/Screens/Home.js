@@ -242,7 +242,9 @@ const styles = StyleSheet.create({
     inactiveFilterText: {
         color: globalStyle.inactiveButtonTextColor,
     },
-    transactions: {},
+    transactions: {
+        marginBottom: 100,
+    },
     addButton: {
         backgroundColor: "#334478",
         position: "absolute",

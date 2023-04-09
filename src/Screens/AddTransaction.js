@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { format } from "date-fns";
@@ -8,18 +8,22 @@ import { globalStyle } from "../common/theme";
 import { Transaction } from "../Models/Transaction";
 import { getTransaction, upsertTransaction } from "../Repositories/TransactionRepository";
 import Snackbar from "react-native-snackbar";
+import { deleteRecord } from "../common/database";
+import { Realm } from "@realm/react";
 
 const AddTransaction = ({ route, navigation }) => {
-    const { _id } = route.params;
-    const action = _id ? 'update' : 'create';
-    const actionTitle = _id ? 'Update' : 'Add';
+    let { _id } = route.params;
+    _id = _id ? new Realm.BSON.ObjectID(_id) : null;
+
+    const action = _id ? "update" : "create";
+    const actionTitle = _id ? "Update" : "Add";
 
     const { useRealm, useObject } = SyncedRealmContext;
     const realm = useRealm();
     const record = getTransaction(useObject, _id, Transaction);
 
-    const { name:initName="", amount:initAmount="", descr:initDescr="", type:initType="debit", date:initDate=new Date() } = record;
-    
+    const { name: initName = "", amount: initAmount = "", descr: initDescr = "", type: initType = "debit", date: initDate = new Date() } = record;
+
     const [type, setType] = useState(initType);
     const [name, setName] = useState(initName);
     const [descr, setDescr] = useState(initDescr);
@@ -28,7 +32,6 @@ const AddTransaction = ({ route, navigation }) => {
     const [mode, setMode] = useState("date");
     const [show, setShow] = useState(false);
     const [focusedInput, setFocusedInput] = useState("");
-
 
     const handleDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -62,7 +65,7 @@ const AddTransaction = ({ route, navigation }) => {
         const amt = parseInt(amount);
         const record = { _id: _id, name, amount: amt, descr, type, date };
         let errorMsg = upsertTransaction(realm, record, action);
-        
+
         if (errorMsg) {
             Snackbar.show({
                 text: errorMsg,
@@ -70,9 +73,26 @@ const AddTransaction = ({ route, navigation }) => {
                 textColor: globalStyle.errorTextColor,
                 backgroundColor: globalStyle.errorBgColor,
             });
-            return;        
+            return;
         }
         navigation.goBack();
+    };
+
+    const handleDeleteTransaction = () => {
+        console.log("Delete Pressed!");
+        deleteRecord(realm, _id, "Transaction");
+        navigation.goBack();
+    };
+
+    const alertForDelete = () => {
+        Alert.alert("Permanently delete?", "The transaction record will be permanently removed", [
+            {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel",
+            },
+            { text: "Delete", onPress: () => handleDeleteTransaction() },
+        ]);
     };
 
     const handleInputFocus = (inputId) => {
@@ -90,20 +110,58 @@ const AddTransaction = ({ route, navigation }) => {
                     <Icon name="arrow-back" size={24} color="#e4e2e6" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>{type == "debit" ? `${actionTitle} Expense` : `${actionTitle} Income`}</Text>
-                <View />
+                {action == "update" ? (
+                    <View style={styles.deleteIconContainer}>
+                        <Icon name="delete" size={24} onPress={alertForDelete} style={styles.deleteIcon} />
+                    </View>
+                ) : (
+                    <View />
+                )}
             </View>
             <View style={styles.buttons}>
-                <TouchableOpacity style={[styles.button, type === "debit" ? styles.activeButton : styles.inactiveButton]} onPress={handleExpenseButton}>
+                <TouchableOpacity
+                    style={[styles.button, type === "debit" ? styles.activeButton : styles.inactiveButton]}
+                    onPress={handleExpenseButton}
+                >
                     <Text style={[styles.buttonText, type === "debit" ? styles.activeButtonText : styles.inactiveButtonText]}>Expense</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, type === "credit" ? styles.activeButton : styles.inactiveButton]} onPress={handleIncomeButton}>
+                <TouchableOpacity
+                    style={[styles.button, type === "credit" ? styles.activeButton : styles.inactiveButton]}
+                    onPress={handleIncomeButton}
+                >
                     <Text style={[styles.buttonText, type === "credit" ? styles.activeButtonText : styles.inactiveButtonText]}>Income</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.inputs}>
-                <TextInput style={[styles.input, focusedInput == "name" && styles.focusedInput]} onFocus={() => handleInputFocus("name")} onBlur={handleInputBlur} onChangeText={(text) => setName(text)} value={name} placeholderTextColor={"#b5b5b9"} placeholder={type == "debit" ? "Expense Name" : "Income Name"} />
-                <TextInput style={[styles.input, focusedInput == "descr" && styles.focusedInput]} onFocus={() => handleInputFocus("descr")} onBlur={handleInputBlur} onChangeText={(text) => setDescr(text)} value={descr} placeholderTextColor={"#b5b5b9"} placeholder="Description" />
-                <TextInput keyboardType={"numeric"} maxLength={13} style={[styles.input, focusedInput == "amount" && styles.focusedInput]} onFocus={() => handleInputFocus("amount")} onBlur={handleInputBlur} onChangeText={(text) => setAmount(text)} value={amount} placeholderTextColor={"#b5b5b9"} placeholder="Amount" />
+                <TextInput
+                    style={[styles.input, focusedInput == "name" && styles.focusedInput]}
+                    onFocus={() => handleInputFocus("name")}
+                    onBlur={handleInputBlur}
+                    onChangeText={(text) => setName(text)}
+                    value={name}
+                    placeholderTextColor={"#b5b5b9"}
+                    placeholder={type == "debit" ? "Expense Name" : "Income Name"}
+                />
+                <TextInput
+                    style={[styles.input, focusedInput == "descr" && styles.focusedInput]}
+                    onFocus={() => handleInputFocus("descr")}
+                    onBlur={handleInputBlur}
+                    onChangeText={(text) => setDescr(text)}
+                    value={descr}
+                    placeholderTextColor={"#b5b5b9"}
+                    placeholder="Description"
+                />
+                <TextInput
+                    keyboardType={"numeric"}
+                    maxLength={13}
+                    style={[styles.input, focusedInput == "amount" && styles.focusedInput]}
+                    onFocus={() => handleInputFocus("amount")}
+                    onBlur={handleInputBlur}
+                    onChangeText={(text) => setAmount(text)}
+                    value={amount}
+                    placeholderTextColor={"#b5b5b9"}
+                    placeholder="Amount"
+                />
                 <View style={styles.datePickerSection}>
                     <TouchableOpacity style={styles.dateTimeButton} onPress={showDatePicker}>
                         <Icon name="event" size={24} style={styles.dateTimeIcon} />
@@ -115,7 +173,9 @@ const AddTransaction = ({ route, navigation }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-            {show && <DateTimePicker value={date} mode={mode} is24Hour={true} display="default" onChange={handleDateChange} maximumDate={new Date()} />}
+            {show && (
+                <DateTimePicker value={date} mode={mode} is24Hour={true} display="default" onChange={handleDateChange} maximumDate={new Date()} />
+            )}
             <TouchableOpacity style={styles.addButton} onPress={handleAddTransaction}>
                 <Text style={styles.addButtonText}>{actionTitle}</Text>
             </TouchableOpacity>
@@ -139,6 +199,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "bold",
         color: "#ffffff",
+    },
+    deleteIconContainer: {},
+    deleteIcon: {
+        color: "#fcb5bd",
     },
     buttons: {
         flexDirection: "row",
